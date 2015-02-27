@@ -13,17 +13,27 @@ print("""
 
 """)
 
-foods = sys.argv
-foods.pop(0) # get rid of script name
+args = sys.argv
+args.pop(0) # get rid of script name
+
+foods = []
+
+for arg in args:
+	if arg.endswith('.foods'):
+		try:
+			foodsfile = open(arg)
+			foods += foodsfile.read().splitlines() # merge lines in file with foods list
+		except Exception:
+			print("File " + arg + " could not be opened.")
+	else:
+		foods.append(arg)
+
 if not foods:
-	print("You didn't enter any foods, or a .foods file.")
+	print("You didn't enter any foods.")
 	sys.exit(0)
 
-if foods[0].endswith('.foods'):
-	foodsfile = open(foods[0])
-	foods.pop(0) # get rid of .foods file name
-	foods = foods + foodsfile.read().splitlines() # merge lines in file with foods list
-
+foods = [food.lower() for food in foods]
+foods = list(set(foods)) # remove duplicates
 print("Searching for: " + ", ".join(foods))
 print("")
 
